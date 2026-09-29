@@ -1,0 +1,43 @@
+.spd {
+  position: fixed; right: clamp(8px, 2vw, 28px); bottom: clamp(8px, 2vw, 28px);
+  width: clamp(170px, 20vw, 250px); pointer-events: none; z-index: 50;
+  font-family: var(--font-arcade); color: var(--ink);
+  filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.45));
+}
+.spd-dial { width: 100%; display: block; overflow: visible; }
+.spd-bezel { fill: rgba(26, 6, 51, 0.82); stroke: var(--sunset-2); stroke-width: 4; }
+.spd-arc { fill: none; stroke: var(--uc-cyan); stroke-width: 5; stroke-linecap: butt; }
+.spd-redzone { fill: none; stroke: var(--agi-red); stroke-width: 12; filter: drop-shadow(0 0 4px var(--agi-red)); }
+.spd-tick { stroke: var(--ink); stroke-width: 2; }
+.spd-tick.major { stroke-width: 4; stroke: var(--sunset-3); }
+.spd-tick.red { stroke: var(--agi-red); }
+.spd-label { font-family: var(--font-arcade); font-size: 10px; fill: var(--ink); }
+.spd-label.red { fill: var(--agi-red); }
+.spd-unit { font-family: var(--font-arcade); font-size: 6px; fill: var(--sunset-2); letter-spacing: 1px; }
+.spd-needle { fill: var(--sunset-1); stroke: var(--sunset-3); stroke-width: 1; filter: drop-shadow(0 0 3px var(--sunset-1)); }
+.spd-hub { fill: var(--night); stroke: var(--sunset-3); stroke-width: 3; }
+
+.spd-readout { display: flex; align-items: stretch; gap: 6px; margin-top: -34px; padding: 0 6%; }
+.spd-gear {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--night); border: 3px solid var(--sunset-2); padding: 4px 6px; min-width: 38px;
+  box-shadow: 3px 3px 0 var(--sunset-1);
+}
+.spd-gear small { font-size: 6px; color: var(--sunset-2); }
+.spd-gear span { font-size: 20px; color: var(--sunset-3); text-shadow: 0 0 6px var(--sunset-2); margin-top: 3px; }
+.spd-digital {
+  flex: 1; display: flex; align-items: flex-end; gap: 4px;
+  background: rgba(0, 0, 0, 0.75); border: 3px solid var(--uc-cyan); padding: 5px 6px;
+  box-shadow: 3px 3px 0 var(--uc-purple), inset 0 0 10px rgba(0, 229, 255, 0.25);
+}
+.spd-7seg { flex: 1; height: auto; display: block; }
+.spd-seg { fill: rgba(255, 159, 28, 0.1); transition: fill 60ms linear; }
+.spd-seg.on { fill: var(--sunset-3); filter: drop-shadow(0 0 2px var(--sunset-2)); }
+.spd-kmh { font-size: 6px; color: var(--uc-cyan); padding-bottom: 2px; }
+
+.spd.is-redline { filter: drop-shadow(0 0 10px rgba(255, 0, 51, 0.7)); }
+.spd.is-redline .spd-seg.on { fill: var(--agi-red); filter: drop-shadow(0 0 3px var(--agi-red)); }
+.spd.is-redline .spd-digital { border-color: var(--agi-red); animation: spd-flash 0.25s steps(2) infinite; }
+.spd.is-redline .spd-bezel { stroke: var(--agi-red); }
+@keyframes spd-flash { 50% { box-shadow: 3px 3px 0 var(--agi-red), inset 0 0 14px rgba(255, 0, 51, 0.5); } }
+@media (prefers-reduced-motion: reduce) { .spd.is-redline .spd-digital { animation: none; } }

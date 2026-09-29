@@ -1,0 +1,71 @@
+#final.stage { padding: 0; min-height: 100vh; }
+.final-pin { position: relative; height: 100vh; width: 100%; overflow: hidden; }
+.final-head { position: absolute; top: 6vh; left: 6vw; z-index: 2; }
+.final-stage { font-family: var(--font-arcade); font-size: .75rem; color: var(--sunset-3); letter-spacing: .2em;
+  animation: final-blink 1s steps(2) infinite; }
+@keyframes final-blink { 50% { opacity: .2; } }
+.final-track { display: flex; height: 100%; width: max-content; will-change: transform; }
+.final-panel { width: 100vw; height: 100%; display: grid; place-items: center; padding: 18vh 6vw 8vh; }
+.final-card { width: min(560px, 88vw); padding: 2rem; text-align: center;
+  background: rgba(26, 6, 51, .55); border: 4px solid var(--c); box-shadow: 8px 8px 0 #000, 0 0 30px var(--c);
+  image-rendering: pixelated; }
+.final-code { font-family: var(--font-arcade); font-size: .65rem; color: var(--c); margin-bottom: 1.2rem; }
+.final-title { font-family: var(--font-arcade); font-size: clamp(.9rem, 2.4vw, 1.4rem); line-height: 1.5;
+  text-shadow: 3px 3px 0 var(--sunset-1); }
+.final-sub { font-family: var(--font-display); font-size: clamp(1.1rem, 3vw, 1.8rem); color: var(--c); margin: .6rem 0 1.4rem; }
+.final-bar { height: 22px; border: 3px solid var(--ink); padding: 3px; background: #000; }
+.final-bar-fill { height: 100%; transform: scaleX(0); transform-origin: left;
+  background: repeating-linear-gradient(90deg, var(--c) 0 12px, transparent 12px 16px); }
+.final-pct { font-family: var(--font-arcade); font-size: .8rem; margin-top: .8rem; color: var(--sunset-3); }
+
+/* pixel-art icons: 8px "pixels" via box-shadow */
+.final-icon { width: 96px; height: 96px; margin: 0 auto 1.4rem; position: relative; }
+.final-icon i { position: absolute; left: 0; top: 0; width: 12px; height: 12px; }
+.final-icon--server i { background: var(--c); box-shadow:
+  12px 0 var(--c), 24px 0 var(--c), 36px 0 var(--c), 48px 0 var(--c), 60px 0 var(--c), 72px 0 var(--c),
+  0 12px var(--c), 72px 12px var(--c), 12px 12px #000, 24px 12px var(--sunset-3), 36px 12px #000, 48px 12px #000, 60px 12px #000,
+  0 24px var(--c), 12px 24px var(--c), 24px 24px var(--c), 36px 24px var(--c), 48px 24px var(--c), 60px 24px var(--c), 72px 24px var(--c),
+  0 36px var(--c), 72px 36px var(--c), 12px 36px #000, 24px 36px var(--sunset-3), 36px 36px #000, 48px 36px #000, 60px 36px #000,
+  0 48px var(--c), 12px 48px var(--c), 24px 48px var(--c), 36px 48px var(--c), 48px 48px var(--c), 60px 48px var(--c), 72px 48px var(--c),
+  0 60px var(--c), 72px 60px var(--c), 12px 60px #000, 24px 60px var(--sunset-3), 36px 60px #000, 48px 60px #000, 60px 60px #000,
+  0 72px var(--c), 12px 72px var(--c), 24px 72px var(--c), 36px 72px var(--c), 48px 72px var(--c), 60px 72px var(--c), 72px 72px var(--c); }
+.final-icon--bug i { left: 12px; box-shadow:
+  12px 0 var(--c), 48px 0 var(--c),
+  24px 12px var(--c), 36px 12px var(--c),
+  12px 24px var(--c), 24px 24px var(--c), 36px 24px var(--c), 48px 24px var(--c),
+  0 36px var(--c), 12px 36px var(--c), 24px 36px var(--ink), 36px 36px var(--c), 48px 36px var(--ink), 60px 36px var(--c),
+  12px 48px var(--c), 24px 48px var(--c), 36px 48px var(--c), 48px 48px var(--c),
+  0 60px var(--c), 24px 60px var(--c), 36px 60px var(--c), 60px 60px var(--c),
+  12px 72px var(--c), 48px 72px var(--c); animation: final-jitter .2s steps(2) infinite; }
+@keyframes final-jitter { 50% { transform: translateX(3px); } }
+.final-icon--wall i { background: var(--c); box-shadow:
+  12px 0 var(--c), 24px 0 var(--c), 36px 0 #000, 48px 0 var(--c), 60px 0 var(--c), 72px 0 var(--c),
+  0 12px var(--c), 12px 12px #000, 24px 12px var(--c), 36px 12px var(--c), 48px 12px var(--c), 60px 12px #000, 72px 12px var(--c),
+  0 24px var(--c), 12px 24px var(--c), 24px 24px var(--c), 36px 24px #000, 48px 24px var(--c), 60px 24px var(--c), 72px 24px var(--c),
+  0 36px var(--c), 12px 36px #000, 24px 36px var(--c), 36px 36px var(--c), 48px 36px var(--c), 60px 36px #000, 72px 36px var(--c),
+  0 48px var(--c), 12px 48px var(--c), 24px 48px var(--c), 36px 48px #000, 48px 48px var(--c), 60px 48px var(--c), 72px 48px var(--c),
+  0 60px var(--c), 12px 60px #000, 24px 60px var(--c), 36px 60px var(--c), 48px 60px var(--c), 60px 60px #000, 72px 60px var(--c),
+  0 72px var(--sunset-1), 12px 72px var(--sunset-1), 24px 72px var(--sunset-2), 36px 72px var(--sunset-1),
+  48px 72px var(--sunset-2), 60px 72px var(--sunset-1), 72px 72px var(--sunset-1); }
+.final-icon--box i { background: var(--uc-cyan); box-shadow:
+  12px 0 var(--uc-cyan), 24px 0 var(--uc-cyan), 36px 0 var(--uc-cyan), 48px 0 var(--uc-cyan), 60px 0 var(--uc-cyan), 72px 0 var(--uc-cyan),
+  0 12px var(--uc-cyan), 72px 12px var(--uc-cyan), 0 24px var(--uc-cyan), 72px 24px var(--uc-cyan),
+  0 36px var(--uc-cyan), 72px 36px var(--uc-cyan), 0 48px var(--uc-cyan), 72px 48px var(--uc-cyan),
+  0 60px var(--uc-cyan), 72px 60px var(--uc-cyan),
+  0 72px var(--uc-cyan), 12px 72px var(--uc-cyan), 24px 72px var(--uc-cyan), 36px 72px var(--uc-cyan), 48px 72px var(--uc-cyan), 60px 72px var(--uc-cyan), 72px 72px var(--uc-cyan),
+  36px 24px var(--agi-red), 24px 36px var(--agi-red), 36px 36px var(--agi-red), 48px 36px var(--agi-red), 36px 48px var(--agi-red);
+  animation: final-pulse 1.2s steps(3) infinite; }
+@keyframes final-pulse { 50% { filter: drop-shadow(0 0 10px var(--uc-cyan)); } }
+
+.final-overtake { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; z-index: 5;
+  font-family: var(--font-arcade); font-size: clamp(2.2rem, 10vw, 8rem); color: var(--sunset-3);
+  text-shadow: 6px 6px 0 var(--sunset-1), 12px 12px 0 var(--uc-purple), 0 0 40px var(--sunset-2);
+  -webkit-text-stroke: 2px #000; opacity: 0; visibility: hidden; font-style: italic; }
+
+/* reduced motion: stacked, bars full */
+.final--static .final-pin { height: auto; overflow: visible; padding-top: 16vh; }
+.final--static .final-track { flex-direction: column; width: 100%; }
+.final--static .final-panel { width: 100%; height: auto; padding: 4vh 6vw; }
+.final--static .final-bar-fill { transform: none; }
+.final--static .final-overtake { display: none; }
+@media (max-width: 600px) { .final-icon { transform: scale(.75); } }

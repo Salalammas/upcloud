@@ -1,32 +1,43 @@
-# React + TypeScript + Vite
+# UPCLOUD RALLY
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+UPCLOUD RALLY is an arcade-rally love letter rendered in the browser: a scroll-driven, 3D ride through sun-bleached stages, drifting hairpins and a chorus of "Game over, yeah!" nostalgia — reimagined with modern WebGL, post-processing and buttery smooth scrolling.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19 + TypeScript, built with Vite
+- three.js via @react-three/fiber, @react-three/drei and @react-three/postprocessing
+- GSAP + Lenis for animation and smooth scroll
+- Oxlint for linting
+- Caddy on Ubuntu 24.04 for hosting
 
-## React Compiler
+## Development
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```sh
+npm install
+npm run dev       # start dev server
+npm run build     # type-check + production build to dist/
+npm run preview   # preview the production build
+npm run lint      # oxlint
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Deploy
+
+1. **DNS** (danidev.fi zone):
+   - `A` record `upcloud` -> `80.47.226.135`
+   - `AAAA` record `upcloud` -> `2a04:3540:1000:310:909b:43ff:fea1:2d3b`
+2. **Bootstrap the server once** (installs Caddy, configures ufw, installs the Caddyfile):
+   ```sh
+   scp deploy/Caddyfile deploy/bootstrap.sh root@80.47.226.135:/tmp/
+   ssh root@80.47.226.135 'bash /tmp/bootstrap.sh'
+   ```
+   Caddy obtains the TLS certificate for `upcloud.danidev.fi` automatically once DNS resolves.
+3. **Deploy** (builds and rsyncs `dist/` to `/var/www/upcloud`):
+   ```sh
+   ./deploy/deploy.sh
+   # override target: DEPLOY_USER=deploy DEPLOY_HOST=example.com ./deploy/deploy.sh
+   ```
+4. **Optional CI**: move `deploy/github-deploy.yml` to `.github/workflows/deploy.yml` and set the `DEPLOY_SSH_KEY` and `DEPLOY_HOST` repository secrets.
+
+---
+
+Fan-made; not affiliated with SEGA.

@@ -1,0 +1,50 @@
+.minimap {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  width: 170px;
+  padding: 8px 8px 4px;
+  background: rgba(26, 6, 51, 0.72);
+  border: 3px solid var(--sunset-3);
+  box-shadow: 4px 4px 0 var(--sunset-1), inset 0 0 12px rgba(0, 229, 255, 0.25);
+  pointer-events: none;
+  z-index: 11;
+}
+.minimap__label {
+  font-family: var(--font-arcade);
+  font-size: 8px;
+  color: var(--sunset-3);
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 0 var(--sunset-1);
+  margin-bottom: 4px;
+}
+.minimap__svg { display: block; width: 100%; height: auto; overflow: visible; }
+.minimap__track-edge { fill: none; stroke: var(--night); stroke-width: 14; stroke-linejoin: round; stroke-linecap: round; }
+.minimap__track {
+  fill: none; stroke: var(--sunset-2); stroke-width: 6;
+  stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 10 4;
+}
+.minimap__cp {
+  fill: var(--night); stroke: var(--ink); stroke-width: 2;
+  transition: fill 0.25s, stroke 0.25s;
+}
+.minimap__cp.is-passed {
+  fill: var(--uc-cyan); stroke: var(--uc-cyan);
+  filter: drop-shadow(0 0 4px var(--uc-cyan));
+}
+.minimap__player {
+  fill: var(--sunset-3); stroke: var(--night); stroke-width: 2;
+  filter: drop-shadow(0 0 3px var(--sunset-3));
+}
+.minimap__agi { transition: opacity 0.3s; }
+.minimap__agi-dot { fill: var(--agi-red); filter: drop-shadow(0 0 4px var(--agi-red)); }
+.minimap__agi-ring {
+  fill: none; stroke: var(--agi-red); stroke-width: 2;
+  transform-box: fill-box; transform-origin: center;
+  animation: minimap-pulse 0.8s ease-out infinite;
+}
+@keyframes minimap-pulse {
+  from { transform: scale(0.5); opacity: 1; }
+  to { transform: scale(1.8); opacity: 0; }
+}
+@media (max-width: 599px) { .minimap { display: none; } }

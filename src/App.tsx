@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { initScroll } from './lib/scroll'
 import Scene from './three/Scene'
 import Hud from './hud/Hud'
+import Intro from './hud/Intro'
 import { sections } from './sections'
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
     <>
       <Scene />
       <Hud />
+      <Intro />
       <main>
         {sections.map(({ id, Comp }) => (
           <Comp key={id} />
