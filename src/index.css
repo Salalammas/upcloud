@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Russo+One&display=swap');
+:root {
+  --sunset-1: #ff2e63; --sunset-2: #ff9f1c; --sunset-3: #ffe66d;
+  --night: #1a0633; --uc-purple: #7b00ff; --uc-cyan: #00e5ff;
+  --agi-red: #ff0033; --ink: #fff8e7;
+  --font-arcade: 'Press Start 2P', monospace; --font-display: 'Russo One', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--night); color: var(--ink); font-family: var(--font-display); overflow-x: hidden; }
+.scene { position: fixed; inset: 0; z-index: 0; }
+main { position: relative; z-index: 1; }
+.hud { position: fixed; inset: 0; z-index: 10; pointer-events: none; }
+.stage { min-height: 200vh; position: relative; padding: 10vh 6vw; }
+.stage-title { font-family: var(--font-arcade); font-size: clamp(1.5rem, 5vw, 4rem); text-shadow: 4px 4px 0 var(--sunset-1); }
+body::after { content: ''; position: fixed; inset: 0; z-index: 20; pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px); mix-blend-mode: multiply; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
