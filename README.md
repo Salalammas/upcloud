@@ -23,12 +23,12 @@ npm run lint      # oxlint
 ## Deploy
 
 1. **DNS** (danidev.fi zone):
-   - `A` record `upcloud` -> `80.47.226.135`
-   - `AAAA` record `upcloud` -> `2a04:3540:1000:310:909b:43ff:fea1:2d3b`
+   - `A` record `upcloud` -> `80.47.227.48`
+   - `AAAA` record `upcloud` -> `2a04:3540:1000:310:746f:dbff:fe75:7918`
 2. **Bootstrap the server once** (installs Caddy, configures ufw, installs the Caddyfile):
    ```sh
-   scp deploy/Caddyfile deploy/bootstrap.sh root@80.47.226.135:/tmp/
-   ssh root@80.47.226.135 'bash /tmp/bootstrap.sh'
+   scp deploy/Caddyfile deploy/bootstrap.sh root@80.47.227.48:/tmp/
+   ssh root@80.47.227.48 'bash /tmp/bootstrap.sh'
    ```
    Caddy obtains the TLS certificate for `upcloud.danidev.fi` automatically once DNS resolves.
 3. **Deploy** (builds and rsyncs `dist/` to `/var/www/upcloud`):

@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 DEPLOY_USER="${DEPLOY_USER:-root}"
-DEPLOY_HOST="${DEPLOY_HOST:-80.47.226.135}"
+DEPLOY_HOST="${DEPLOY_HOST:-80.47.227.48}"
 
 npm ci && npm run build
 
