@@ -74,7 +74,7 @@ export default function Start() {
 
   const letters = (word: string, offset: number) =>
     word.split('').map((ch, i) => (
-      <span key={i + offset} className="start-letter" style={{ ['--i' as string]: i + offset }}>
+      <span key={i + offset} className="start-letter" aria-hidden="true" style={{ ['--i' as string]: i + offset }}>
         {ch}
       </span>
     ))
@@ -84,7 +84,7 @@ export default function Start() {
   return (
     <section className="stage start" id="start" ref={root}>
       <div className="start-hero">
-        <h1 className="start-title" ref={title} aria-label="UpCloud Rally">
+        <h1 className="start-title" ref={title} aria-label="UPCLOUD RALLY">
           <span className="start-word">{letters(TITLE_1, 0)}</span>
           <span className="start-word start-word--2">{letters(TITLE_2, TITLE_1.length)}</span>
         </h1>

@@ -38,8 +38,13 @@
 
 .glitch-tag {
   position: absolute;
-  right: 16px;
+  /* Bottom-center: clear of Minimap (bottom-left) and Speedometer (bottom-right).
+     Centered via margin so the per-frame inline transform jitter isn't clobbered. */
+  left: 0;
+  right: 0;
   bottom: 16px;
+  width: max-content;
+  margin-inline: auto;
   font-family: var(--font-arcade, monospace);
   font-size: clamp(0.55rem, 1.2vw, 0.85rem);
   color: var(--agi-red, #ff0033);
@@ -53,6 +58,10 @@
 
 @keyframes glitch-tag-blink {
   50% { filter: brightness(1.6); }
+}
+
+@media (max-width: 700px) {
+  .glitch-tag { bottom: 150px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

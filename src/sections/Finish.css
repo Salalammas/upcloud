@@ -58,6 +58,8 @@
   box-shadow: 6px 6px 0 var(--uc-purple), 0 0 40px rgba(123,0,255,.6); animation: fin-pop .4s ease-out;
   transition: transform .15s, box-shadow .15s; }
 .fin-cta:hover, .fin-cta:focus-visible { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--uc-purple), 0 0 60px var(--uc-cyan); outline: none; }
+/* Keyboard focus: high-contrast ring in addition to the hover lift. */
+.fin-cta:focus-visible { outline: 4px dashed var(--uc-cyan); outline-offset: 6px; }
 @keyframes fin-pop { from { transform: scale(.4); opacity: 0; } }
 .fin-insert { font-family: var(--font-arcade); font-size: .7rem; color: var(--uc-cyan); animation: fin-blink 1.2s steps(2) infinite; }
 

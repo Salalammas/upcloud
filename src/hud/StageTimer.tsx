@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { scrollState, stageIndex, STAGE_COUNT } from '../lib/scroll'
+import { scrollState, stageIndex, STAGE_COUNT, INTRO_DONE_EVENT } from '../lib/scroll'
 import './StageTimer.css'
 
 const LABELS = ['START', 'STAGE 1', 'STAGE 2', 'STAGE 3', 'FINAL', 'FINISH']
@@ -22,13 +22,26 @@ export default function StageTimer() {
   const splitRefs = useRef<(HTMLLIElement | null)[]>([])
 
   useEffect(() => {
-    const start = performance.now()
+    let start = performance.now()
+    const timers: number[] = []
     const reached: (number | null)[] = Array(STAGE_COUNT).fill(null)
     reached[0] = 0
+    // Reset split rows (StrictMode remount / HMR may leave stale state).
+    splitRefs.current.forEach((li) => {
+      if (!li) return
+      li.classList.remove('is-set', 'is-new', 'is-current')
+      const t = li.querySelector('.st-split-t')
+      if (t) t.textContent = `-'--"--`
+    })
     let lastStage = -1
     let lastTime = ''
     let lastLow: boolean | null = null
     let raf = 0
+    // The clock runs from when the Intro unlocks scroll (if no stage reached yet).
+    const onIntroDone = () => {
+      if (reached.every((r, i) => i === 0 || r === null)) start = performance.now()
+    }
+    window.addEventListener(INTRO_DONE_EVENT, onIntroDone)
 
     const tick = (now: number) => {
       const p = scrollState.progress
@@ -40,9 +53,10 @@ export default function StageTimer() {
           reached[i] = elapsed
           const li = splitRefs.current[i - 1]
           if (li) {
-            li.querySelector('.st-split-t')!.textContent = fmt(elapsed)
+            const t = li.querySelector('.st-split-t')
+            if (t) t.textContent = fmt(elapsed)
             li.classList.add('is-set', 'is-new')
-            window.setTimeout(() => li.classList.remove('is-new'), 900)
+            timers.push(window.setTimeout(() => li.classList.remove('is-new'), 900))
           }
         }
       }
@@ -50,7 +64,7 @@ export default function StageTimer() {
       if (idx !== lastStage) {
         lastStage = idx
         if (stageRef.current) stageRef.current.textContent = LABELS[idx]
-        if (stageNumRef.current) stageNumRef.current.textContent = `${idx}/${STAGE_COUNT - 1}`
+        if (stageNumRef.current) stageNumRef.current.textContent = `${idx + 1}/${STAGE_COUNT}`
         if (lapRef.current) lapRef.current.textContent = `${Math.min(idx + 1, STAGE_COUNT - 1)}/${STAGE_COUNT - 1}`
         splitRefs.current.forEach((li, i) => li?.classList.toggle('is-current', i === idx))
       }
@@ -69,7 +83,11 @@ export default function StageTimer() {
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener(INTRO_DONE_EVENT, onIntroDone)
+      timers.forEach((id) => window.clearTimeout(id))
+    }
   }, [])
 
   return (
@@ -78,7 +96,7 @@ export default function StageTimer() {
         <div className="st-label">STAGE</div>
         <div className="st-stage">
           <span ref={stageRef}>START</span>
-          <span className="st-stage-num" ref={stageNumRef}>0/5</span>
+          <span className="st-stage-num" ref={stageNumRef}>1/6</span>
         </div>
         <div className="st-pos">
           <span className="st-label">POS</span> <span className="st-pos-num">1</span>

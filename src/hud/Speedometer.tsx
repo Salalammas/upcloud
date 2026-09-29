@@ -61,6 +61,7 @@ export default function Speedometer() {
     let lastStr = ''
     let lastGear = -1
     let lastRed = false
+    let lastNeedle = ''
     const setDigits = (str: string) => {
       for (let d = 0; d < 3; d++) {
         const g = digitRefs.current[d]
@@ -85,7 +86,11 @@ export default function Speedometer() {
         frac = Math.min(1.02, base + jitter)
       }
       const deg = START + SWEEP * Math.max(0, frac) + 90
-      if (needleRef.current) needleRef.current.setAttribute('transform', `rotate(${deg.toFixed(2)} ${CX} ${CY})`)
+      const needle = `rotate(${deg.toFixed(1)} ${CX} ${CY})`
+      if (needle !== lastNeedle && needleRef.current) {
+        needleRef.current.setAttribute('transform', needle)
+        lastNeedle = needle
+      }
       const shown = red ? Math.max(Math.round(speed), Math.round(frac * MAX_SPEED)) : Math.round(speed)
       const str = String(Math.min(MAX_SPEED, shown)).padStart(3, ' ')
       if (str !== lastStr) { setDigits(str); lastStr = str }

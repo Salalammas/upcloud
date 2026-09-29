@@ -5,7 +5,7 @@ import './CheckpointBanner.css'
 const labelFor = (stage: number) =>
   stage === 2 ? 'DANGER!' : stage === 5 ? 'NEW RECORD!' : 'CHECKPOINT!'
 const subFor = (stage: number) =>
-  stage === 2 ? 'EXTENDED PLAY' : stage === 5 ? 'COURSE CLEAR' : `STAGE ${stage}`
+  stage === 2 ? 'EXTENDED PLAY' : stage === 5 ? 'COURSE CLEAR' : stage === 4 ? 'FINAL STAGE' : `STAGE ${stage}`
 
 export default function CheckpointBanner() {
   const rootRef = useRef<HTMLDivElement>(null)

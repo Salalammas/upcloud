@@ -27,7 +27,7 @@ export default function GlitchOverlay() {
         if (root.style.opacity !== '0') root.style.opacity = '0'
         return
       }
-      root.style.opacity = '1'
+      if (root.style.opacity !== '1') root.style.opacity = '1'
 
       // Glitch bars: reposition every few frames (faster at high chaos)
       const every = k > 0.6 ? 2 : 4

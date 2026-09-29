@@ -25,10 +25,15 @@ export default function Minimap() {
     })
     let raf = 0
     let lastPassed = -1
+    let lastP = -1
+    let agiVisible = false
     const tick = (t: number) => {
       const p = Math.min(1, Math.max(0, scrollState.progress))
-      const pt = path.getPointAtLength(p * len)
-      playerRef.current?.setAttribute('transform', `translate(${pt.x} ${pt.y})`)
+      if (p !== lastP) {
+        lastP = p
+        const pt = path.getPointAtLength(p * len)
+        playerRef.current?.setAttribute('transform', `translate(${pt.x.toFixed(2)} ${pt.y.toFixed(2)})`)
+      }
       const passed = Math.floor(p * STAGE_COUNT + 0.5) - 1
       if (passed !== lastPassed) {
         lastPassed = passed
@@ -43,11 +48,13 @@ export default function Minimap() {
           const j = c * 3
           agi.setAttribute(
             'transform',
-            `translate(${ap.x + Math.sin(t / 47) * j} ${ap.y + Math.cos(t / 53) * j})`,
+            `translate(${(ap.x + Math.sin(t / 47) * j).toFixed(2)} ${(ap.y + Math.cos(t / 53) * j).toFixed(2)})`,
           )
-          agi.style.opacity = String(Math.min(1, c * 1.5))
-        } else {
+          agi.style.opacity = String(Math.min(1, c * 1.5).toFixed(2))
+          agiVisible = true
+        } else if (agiVisible) {
           agi.style.opacity = '0'
+          agiVisible = false
         }
       }
       raf = requestAnimationFrame(tick)
