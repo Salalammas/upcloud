@@ -1,4 +1,4 @@
-#final.stage { padding: 0; min-height: 100vh; }
+#final.stage { padding: 0; min-height: auto; }
 .final-pin { position: relative; height: 100vh; width: 100%; overflow: hidden; }
 .final-head { position: absolute; top: 6vh; left: 6vw; z-index: 2; }
 .final-stage { font-family: var(--font-arcade); font-size: .75rem; color: var(--sunset-3); letter-spacing: .2em;
@@ -69,3 +69,8 @@
 .final--static .final-bar-fill { transform: none; }
 .final--static .final-overtake { display: none; }
 @media (max-width: 600px) { .final-icon { transform: scale(.75); } }
+@media (max-width: 700px) {
+  .final-head { top: max(6vh, 96px); left: 16px; } /* clear the fixed stage timer */
+  .final-panel { padding: 22vh 16px 12vh; }
+  .final-card { padding: 1.2rem; }
+}

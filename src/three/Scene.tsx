@@ -1,32 +1,20 @@
-import { Suspense } from 'react'
-import { Canvas } from '@react-three/fiber'
-import Sky from './Sky'
-import Track from './Track'
-import Car from './Car'
-import AgiEntity from './AgiEntity'
-import Particles from './Particles'
-import CameraRig from './CameraRig'
-import Effects from './Effects'
+import { lazy, Suspense } from 'react'
+
+// Heavy 3D code (three, R3F, drei, postprocessing) is split into its own chunks
+// and fetched after the HTML/HUD has painted.
+const SceneCanvas = lazy(() => import('./SceneCanvas'))
+
+const fallbackStyle: React.CSSProperties = {
+  position: 'fixed',
+  inset: 0,
+  zIndex: 0,
+  background: 'linear-gradient(180deg, #1a0633 0%, #3a0a5e 35%, #b8336a 65%, #ff6b6b 82%, #ffb86b 100%)',
+}
 
 export default function Scene() {
   return (
-    <div className="scene" aria-hidden>
-      <Canvas camera={{ position: [0, 2, 8], fov: 55, far: 400 }} dpr={[1, 1.75]} gl={{ antialias: false, powerPreference: 'high-performance' }}>
-        <color attach="background" args={['#1a0633']} />
-        <fog attach="fog" args={['#ff6b6b', 30, 160]} />
-        <ambientLight intensity={0.5} />
-        <hemisphereLight args={['#ffb86b', '#3a0a5e', 0.8]} />
-        <directionalLight position={[-10, 12, -20]} intensity={1.6} color="#ffd29a" />
-        <Suspense fallback={null}>
-          <Sky />
-          <Track />
-          <Car />
-          <AgiEntity />
-          <Particles />
-        </Suspense>
-        <CameraRig />
-        <Effects />
-      </Canvas>
-    </div>
+    <Suspense fallback={<div className="scene" style={fallbackStyle} aria-hidden />}>
+      <SceneCanvas />
+    </Suspense>
   )
 }

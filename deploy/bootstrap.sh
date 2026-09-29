@@ -33,6 +33,7 @@ fi
 
 # --- Firewall ---
 if ! command -v ufw >/dev/null 2>&1; then
+  apt-get update
   apt-get install -y ufw
 fi
 ufw allow 22/tcp
@@ -42,8 +43,10 @@ ufw allow 443/udp   # HTTP/3
 ufw --force enable
 
 # --- Web root ---
+# WEB_OWNER must match the user that rsyncs dist/ (DEPLOY_USER in deploy.sh).
+WEB_OWNER="${WEB_OWNER:-root}"
 mkdir -p "$WEB_ROOT"
-chown -R caddy:caddy "$WEB_ROOT" 2>/dev/null || true
+chown -R "$WEB_OWNER":"$WEB_OWNER" "$WEB_ROOT"
 chmod 755 "$WEB_ROOT"
 
 # --- Caddyfile ---

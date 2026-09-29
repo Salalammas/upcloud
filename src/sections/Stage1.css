@@ -1,4 +1,7 @@
 #stage1 { padding: 0; min-height: auto; }
+/* reduced motion: no GSAP pin, so keep the ~300vh band with a sticky panel */
+#stage1.s1-static { min-height: 300vh; }
+#stage1.s1-static .s1-pin { position: sticky; top: 0; }
 .s1-pin { height: 100vh; padding: 8vh 6vw 6vh; display: flex; flex-direction: column; gap: 3vh; }
 .s1-card { align-self: flex-start; display: flex; flex-direction: column; gap: .6rem; padding: 1rem 1.6rem;
   background: linear-gradient(90deg, rgba(26,6,51,.75), rgba(26,6,51,.2)); border-left: 8px solid var(--sunset-2);
@@ -32,7 +35,7 @@
 .s1-beat { text-shadow: 3px 3px 0 var(--sunset-1); font-style: italic; }
 .s1-beat:last-child { color: var(--sunset-3); }
 @media (max-width: 800px) {
-  .s1-pin { padding: 6vh 16px 4vh; }
+  .s1-pin { padding: max(6vh, 96px) 16px 4vh; } /* clear the fixed stage timer */
   .s1-grid { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
   .s1-side { gap: .7rem; }
 }

@@ -18,7 +18,7 @@ function poseAt(p: number, pos: THREE.Vector3, look: THREE.Vector3, time: number
   const t = ease(stageLocal(p, i))
   switch (i) {
     case 0: // low wide shot at start line
-      pos.lerpVectors(tmpA.set(7, 0.7, 11), tmpB.set(4, 1.3, 9), t)
+      pos.lerpVectors(tmpA.set(3.4, 0.9, 11), tmpB.set(4, 1.3, 9), t)
       look.lerpVectors(tmpA.set(0, 0.6, -6), tmpB.set(0, 0.8, -12), t)
       return 0.03 * t
     case 1: // rising drone over the desert
@@ -30,20 +30,21 @@ function poseAt(p: number, pos: THREE.Vector3, look: THREE.Vector3, time: number
       look.lerpVectors(tmpA.set(0, 0, -22), AGI, t)
       return THREE.MathUtils.lerp(-0.06, 0, t)
     case 3: { // low chase cam behind car, dutch angle swinging in
-      pos.lerpVectors(tmpA.set(-1.2, 1.6, 7), tmpB.set(0.4, 0.9, 3.6), t)
-      look.lerpVectors(tmpA.set(0, 2.5, -20), tmpB.set(0, 0.9, -12), t)
+      pos.lerpVectors(tmpA.set(-1.2, 1.9, 8), tmpB.set(0.4, 1.8, 6.6), t)
+      look.lerpVectors(tmpA.set(0, 2.5, -20), tmpB.set(0, 1.1, -12), t)
       pos.x += Math.sin(time * 0.8) * 0.15
-      return Math.sin(t * Math.PI * 0.9) * 0.38
+      return Math.sin(t * Math.PI) * 0.38
     }
     case 4: { // orbit around car + AGI
       const a = t * Math.PI * 1.25
       const r = THREE.MathUtils.lerp(24, 30, t)
-      pos.set(Math.sin(a) * r, THREE.MathUtils.lerp(3, 10, t), ORBIT_CENTER.z + Math.cos(a) * r)
+      // elliptical (x * 0.5) so the camera stays clear of the roadside hills (up to ~10u high at |x|>20)
+      pos.set(Math.sin(a) * r * 0.5, THREE.MathUtils.lerp(4, 10, t), ORBIT_CENTER.z + Math.cos(a) * r)
       look.copy(ORBIT_CENTER)
       return 0.1 * Math.sin(t * Math.PI)
     }
     default: // victory wide: pull up and back
-      pos.lerpVectors(tmpA.set(-10, 12, 2), tmpB.set(0, 42, 45), t)
+      pos.lerpVectors(tmpA.set(-10.6, 10, -41.2), tmpB.set(0, 42, 45), t) // starts at stage-4 end pose
       look.lerpVectors(ORBIT_CENTER, tmpB.set(0, 2, -15), t)
       return 0
   }
@@ -53,7 +54,7 @@ export default function CameraRig() {
   const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera
   const pointer = useThree((s) => s.pointer)
   const state = useRef({
-    pos: new THREE.Vector3(7, 0.7, 11),
+    pos: new THREE.Vector3(3.4, 0.9, 11),
     look: new THREE.Vector3(0, 0.6, -6),
     roll: 0,
     fov: 55,

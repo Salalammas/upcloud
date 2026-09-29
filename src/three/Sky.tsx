@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { scrollState, chaos, stageLocal } from '../lib/scroll'
@@ -27,7 +27,7 @@ void main() {
   float t = clamp(h, 0.0, 1.0);
   vec3 col = mix(uHorizon, uMid, smoothstep(0.0, 0.18, t));
   col = mix(col, uTop, smoothstep(0.15, 0.65, t));
-  if (h < 0.0) col = mix(uHorizon, uTop * 0.6, smoothstep(0.0, -0.3, h));
+  if (h < 0.0) col = mix(uHorizon, uTop * 0.6, 1.0 - smoothstep(-0.3, 0.0, h));
   // chunky 90s dithering bands
   col = floor(col * 24.0 + hash(gl_FragCoord.xy * 0.5) * 0.5) / 24.0;
   // chaos: scanline tear + flicker
@@ -138,6 +138,7 @@ export default function Sky() {
     [],
   )
   const geos = useMemo(() => LAYERS.map((l) => mountainGeometry(l.w, l.h, l.peaks, l.seed)), [])
+  useEffect(() => () => geos.forEach((g) => g.dispose()), [geos])
   const mtnBase = useMemo(() => LAYERS.map((l) => new THREE.Color(l.base)), [])
 
   useFrame((state) => {
@@ -179,7 +180,7 @@ export default function Sky() {
   return (
     <group ref={group}>
       <mesh renderOrder={-10} frustumCulled={false}>
-        <sphereGeometry args={[400, 32, 24]} />
+        <sphereGeometry args={[300, 32, 24]} />
         <shaderMaterial
           vertexShader={skyVert}
           fragmentShader={skyFrag}

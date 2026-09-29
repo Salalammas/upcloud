@@ -12,8 +12,10 @@ export default function Hud() {
         <StageTimer />
         <Speedometer />
         <Minimap />
-        <CheckpointBanner />
       </div>
+      {/* Outside .hud so its z-index (60) applies at the root stacking level,
+          above the glitch overlay (15) and scanlines (20). */}
+      <CheckpointBanner />
     </>
   )
 }

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { gsap, ScrollTrigger, reducedMotion } from '../lib/scroll'
+import { gsap, reducedMotion } from '../lib/scroll'
 import './Stage1.css'
 
 const W = 1000
@@ -46,6 +46,7 @@ export default function Stage1() {
       const marks = gsap.utils.toArray<HTMLElement>('.s1-mile', el)
       const beats = gsap.utils.toArray<HTMLElement>('.s1-beat', el)
       if (reducedMotion) {
+        el.classList.add('s1-static')
         gsap.set(p, { strokeDasharray: len, strokeDashoffset: 0 })
         gsap.set([...marks, ...beats], { opacity: 1 })
         setCounters(1)
@@ -60,7 +61,7 @@ export default function Stage1() {
         scrollTrigger: {
           trigger: pin.current,
           start: 'top top',
-          end: '+=180%',
+          end: '+=200%', // 100vh pin + 200vh spacing = ~300vh, one scene band
           pin: pin.current,
           scrub: 0.6,
           onUpdate: (self) => setCounters(self.progress * self.progress),
@@ -74,7 +75,6 @@ export default function Stage1() {
         tl.to(b, { opacity: 1, x: 0, duration: 0.08, ease: 'power3.out' }, 0.35 + i * 0.2)
       })
     }, el)
-    ScrollTrigger.refresh()
     return () => ctx.revert()
   }, [])
 

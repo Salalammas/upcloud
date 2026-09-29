@@ -6,12 +6,21 @@
   --font-arcade: 'Press Start 2P', monospace; --font-display: 'Russo One', sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { background: var(--night); color: var(--ink); font-family: var(--font-display); overflow-x: hidden; }
+html, body { background: var(--night); color: var(--ink); font-family: var(--font-display); }
+/* overflow-x: hidden on <body> turns it into a scroll container and breaks position: sticky
+   (Stage 3). Use clip (no scroll container); hidden on <html> only as a fallback. */
+html { overflow-x: hidden; overflow-x: clip; }
+body { overflow-x: clip; }
 .scene { position: fixed; inset: 0; z-index: 0; }
 main { position: relative; z-index: 1; }
 .hud { position: fixed; inset: 0; z-index: 10; pointer-events: none; }
-.stage { min-height: 200vh; position: relative; padding: 10vh 6vw; }
+/* Each of the 6 sections spans ~300vh of scroll (incl. pin spacing) so the 3D scene's
+   six equal progress bands line up with the DOM stage on screen. */
+.stage { min-height: 300vh; position: relative; padding: 10vh 6vw; }
+@media (max-width: 700px) { .stage { padding: 10vh 16px; } }
 .stage-title { font-family: var(--font-arcade); font-size: clamp(1.5rem, 5vw, 4rem); text-shadow: 4px 4px 0 var(--sunset-1); }
 body::after { content: ''; position: fixed; inset: 0; z-index: 20; pointer-events: none;
   background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px); mix-blend-mode: multiply; }
+/* Every full-screen overlay must let clicks through (Intro button, Finish CTA). */
+.hud, .glitch-overlay, .cp-banner { pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

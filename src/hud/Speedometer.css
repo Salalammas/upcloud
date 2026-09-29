@@ -41,3 +41,4 @@
 .spd.is-redline .spd-bezel { stroke: var(--agi-red); }
 @keyframes spd-flash { 50% { box-shadow: 3px 3px 0 var(--agi-red), inset 0 0 14px rgba(255, 0, 51, 0.5); } }
 @media (prefers-reduced-motion: reduce) { .spd.is-redline .spd-digital { animation: none; } }
+@media (max-width: 700px) { .spd { width: 112px; opacity: .85; } .spd-readout { margin-top: -22px; } .spd-gear span { font-size: 14px; } }

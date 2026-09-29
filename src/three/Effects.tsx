@@ -29,6 +29,9 @@ export default function Effects() {
   const glitchRef = useRef<GlitchEffect>(null)
   const caOffset = useMemo(() => new Vector2(BASE_CA, BASE_CA), [])
   const glitchOn = useRef(false)
+  const glitchDelay = useMemo(() => new Vector2(0.4, 1.2), [])
+  const glitchDuration = useMemo(() => new Vector2(0.1, 0.3), [])
+  const glitchStrength = useMemo(() => new Vector2(0.1, 0.3), [])
 
   useFrame(() => {
     const c = chaos(scrollState.progress)
@@ -67,10 +70,10 @@ export default function Effects() {
       />
       <Glitch
         ref={glitchRef}
-        active={false}
-        delay={new Vector2(0.4, 1.2)}
-        duration={new Vector2(0.1, 0.3)}
-        strength={new Vector2(0.1, 0.3)}
+        mode={GlitchMode.DISABLED}
+        delay={glitchDelay}
+        duration={glitchDuration}
+        strength={glitchStrength}
         ratio={0.85}
       />
       <Scanline blendFunction={BlendFunction.OVERLAY} density={1.4} opacity={0.08} />

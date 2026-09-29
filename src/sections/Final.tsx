@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { gsap, ScrollTrigger, reducedMotion } from '../lib/scroll'
+import { gsap, reducedMotion } from '../lib/scroll'
 import './Final.css'
 
 const PANELS = [
@@ -33,7 +33,9 @@ export default function Final() {
         scrollTrigger: {
           trigger: el,
           start: 'top top',
-          end: () => '+=' + dist() * 1.6,
+          // Scroll length tied to viewport height (not track width, which gave ~850vh on
+          // wide screens) so this section matches the other ~300vh scene bands.
+          end: () => '+=' + window.innerHeight * 2,
           pin: '.final-pin',
           scrub: 0.6,
           invalidateOnRefresh: true,
@@ -57,7 +59,6 @@ export default function Final() {
       }
       tl.to({}, { duration: 0.5 })
     }, el)
-    ScrollTrigger.refresh()
     return () => ctx.revert()
   }, [])
 

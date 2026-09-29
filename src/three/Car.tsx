@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { scrollState, stageLocal } from '../lib/scroll'
 
@@ -61,7 +61,9 @@ export default function Car() {
   const body = useRef<THREE.Group>(null)
   const wheels = useRef<THREE.Group[]>([])
   const spin = useRef(0)
+  const light = useRef<THREE.PointLight>(null)
   const livery = useMemo(makeLiveryTexture, [])
+  useEffect(() => () => livery.dispose(), [livery])
 
   useFrame((state, dt) => {
     const p = scrollState.progress
@@ -69,13 +71,12 @@ export default function Car() {
     const g = root.current
     if (!g) return
     const arrive = stageLocal(p, 3)
-    if (p < 3 / 6) {
-      g.scale.setScalar(0)
-      g.visible = false
-      return
-    }
-    g.visible = true
-    g.scale.setScalar(1)
+    // Keep the root (and its point light) always in the scene so the light count never
+    // changes (which would force a shader recompile of every material); hide meshes only.
+    const show = p >= 3 / 6
+    for (const ch of g.children) if (ch !== light.current) ch.visible = show
+    if (light.current) light.current.intensity = show ? 4 : 0
+    if (!show) return
     const e = easeOut(arrive)
     // drive in from behind the camera (camera at z=8) to settle at z≈1
     const targetZ = THREE.MathUtils.lerp(14, 1, e)
@@ -98,7 +99,7 @@ export default function Car() {
   })
 
   return (
-    <group ref={root} scale={0} visible={false}>
+    <group ref={root}>
       {/* car faces -Z (driving along the road) */}
       <group ref={body} position={[0, 0.36, 0]}>
         {/* lower body */}
@@ -210,7 +211,7 @@ export default function Car() {
       <Wheel position={[-0.82, 0.36, 1.15]} spinRef={wheels} />
       <Wheel position={[0.82, 0.36, 1.15]} spinRef={wheels} />
       {/* headlight glow onto the road */}
-      <pointLight position={[0, 0.6, -2.6]} color="#fff4c8" intensity={4} distance={8} />
+      <pointLight ref={light} position={[0, 0.6, -2.6]} color="#fff4c8" intensity={0} distance={8} />
     </group>
   )
 }

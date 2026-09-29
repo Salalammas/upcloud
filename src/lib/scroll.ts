@@ -10,6 +10,23 @@ export const scrollState = { progress: 0, velocity: 0 }
 export const reducedMotion =
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
+/** Dispatched on window when the Intro overlay has finished and unlocked scroll. */
+export const INTRO_DONE_EVENT = 'intro:done'
+
+let current: Lenis | null = null
+let locked = false
+
+/** The live Lenis instance (null before App mounts / after unmount). */
+export const getLenis = () => current
+
+/** Lock/unlock smooth scrolling (used by the Intro). Safe to call before initScroll. */
+export function setScrollLocked(v: boolean) {
+  locked = v
+  if (!current) return
+  if (v) current.stop()
+  else current.start()
+}
+
 export function initScroll() {
   const lenis = new Lenis({ lerp: reducedMotion ? 1 : 0.09 })
   lenis.on('scroll', (e: { progress: number; velocity: number }) => {
@@ -17,8 +34,18 @@ export function initScroll() {
     scrollState.velocity = e.velocity
     ScrollTrigger.update()
   })
-  gsap.ticker.add((t) => lenis.raf(t * 1000))
+  const tick = (t: number) => lenis.raf(t * 1000)
+  gsap.ticker.add(tick)
   gsap.ticker.lagSmoothing(0)
+  // Make destroy() also detach from the gsap ticker (StrictMode mounts twice).
+  const destroy = lenis.destroy.bind(lenis)
+  lenis.destroy = () => {
+    gsap.ticker.remove(tick)
+    if (current === lenis) current = null
+    destroy()
+  }
+  current = lenis
+  if (locked) lenis.stop()
   return lenis
 }
 

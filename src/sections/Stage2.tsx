@@ -19,8 +19,9 @@ export default function Stage2() {
     const el = root.current
     if (!el) return
     const ctx = gsap.context(() => {
-      const lines = gsap.utils.toArray<HTMLElement>('.s2-line')
+      const lines = gsap.utils.toArray<HTMLElement>('.s2-line', el)
       if (reducedMotion) {
+        el.classList.add('s2-static')
         gsap.set(['.s2-banner', '.s2-glitch', '.s2-wrongway', '.s2-terminal'], { opacity: 1, x: 0, scale: 1 })
         gsap.set(lines, { clipPath: 'inset(0 0% 0 0)' })
         return
@@ -29,7 +30,7 @@ export default function Stage2() {
         scrollTrigger: {
           trigger: el,
           start: 'top top',
-          end: '+=140%',
+          end: '+=200%', // 100vh pin + 200vh spacing = ~300vh, one scene band
           pin: '.s2-pin',
           scrub: 0.6,
         },

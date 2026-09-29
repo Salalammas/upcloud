@@ -75,7 +75,6 @@ export default function AgiEntity() {
   )
   const dummy = useMemo(() => new THREE.Object3D(), [])
   const tmpColor = useMemo(() => new THREE.Color(), [])
-  const camLocal = useMemo(() => new THREE.Vector3(), [])
   const smooth = useRef({ c: 0, scale: 1 })
 
   useFrame((state, dt) => {
@@ -123,9 +122,7 @@ export default function AgiEntity() {
 
     // pupil tracks camera
     if (eye.current && root.current) {
-      camLocal.copy(state.camera.position)
-      root.current.worldToLocal(camLocal)
-      eye.current.lookAt(camLocal)
+      eye.current.lookAt(state.camera.position) // Object3D.lookAt expects world space
       const dil = 1 - c * 0.5 + finish * 0.2
       eye.current.scale.setScalar(dil)
     }
@@ -180,7 +177,7 @@ export default function AgiEntity() {
           <meshBasicMaterial ref={pupilMat} color="#001018" toneMapped={false} />
         </mesh>
       </group>
-      <instancedMesh ref={shards} args={[undefined, undefined, SHARDS]}>
+      <instancedMesh ref={shards} args={[undefined, undefined, SHARDS]} frustumCulled={false}>
         <tetrahedronGeometry args={[1, 0]} />
         <meshStandardMaterial flatShading roughness={0.4} metalness={0.2} />
       </instancedMesh>

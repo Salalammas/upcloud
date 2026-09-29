@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { scrollState, stageIndex, stageLocal, chaos } from '../lib/scroll'
@@ -95,7 +95,7 @@ const mainFrag = /* glsl */ `
     if (vMode > 1.5) {
       // confetti: little diamond sparkle
       float d = abs(uv.x) + abs(uv.y);
-      a = smoothstep(0.5, 0.2, d);
+      a = 1.0 - smoothstep(0.2, 0.5, d);
     } else if (vMode > 0.5) {
       // data bit: hard square with scanline glitch
       a = step(max(abs(uv.x), abs(uv.y)), 0.42);
@@ -103,7 +103,7 @@ const mainFrag = /* glsl */ `
     } else {
       // speed streak: vertically elongated soft ellipse
       vec2 q = uv * vec2(1.0 + vStretch * 5.0, 1.0);
-      a = smoothstep(0.5, 0.0, length(q));
+      a = 1.0 - smoothstep(0.0, 0.5, length(q));
     }
     if (a < 0.01) discard;
     gl_FragColor = vec4(vColor * a, a * vAlpha);
@@ -119,7 +119,7 @@ const burstVert = /* glsl */ `
   varying float vTone;
   void main() {
     float t = fract(uTime * (0.9 + aSeed.x * 0.8) + aSeed.w);
-    vec3 origin = vec3(0.0, 0.0, 2.0) + vec3((aSeed.y - 0.5) * 1.6, 0.05, 0.0);
+    vec3 origin = vec3(0.0, 0.0, 2.9) + vec3((aSeed.y - 0.5) * 1.6, 0.05, 0.0);
     vec3 v = vec3((aSeed.y - 0.5) * 3.0, 1.2 + aSeed.z * 2.2, 3.0 + aSeed.x * 4.0);
     vec3 p = origin + v * t + vec3(0.0, -3.5, 0.0) * t * t;
     p.y = max(p.y, 0.0);
@@ -136,7 +136,7 @@ const burstFrag = /* glsl */ `
   varying float vTone;
   void main() {
     float d = length(gl_PointCoord - 0.5);
-    float a = smoothstep(0.5, 0.1, d) * vAlpha;
+    float a = (1.0 - smoothstep(0.1, 0.5, d)) * vAlpha;
     if (a < 0.005) discard;
     vec3 col = mix(vec3(0.85, 0.65, 0.4), vec3(1.0, 0.9, 0.7), vTone);
     gl_FragColor = vec4(col * a, a);
@@ -205,6 +205,16 @@ export default function Particles() {
         blending: THREE.AdditiveBlending,
       }),
     [],
+  )
+
+  useEffect(
+    () => () => {
+      mainGeo.dispose()
+      burstGeo.dispose()
+      mainMat.dispose()
+      burstMat.dispose()
+    },
+    [mainGeo, burstGeo, mainMat, burstMat],
   )
 
   const smooth = useRef({ speed: 0, chaos: 0, celebrate: 0, burst: 0, travel: 0 })

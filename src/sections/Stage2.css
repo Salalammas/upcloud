@@ -1,10 +1,15 @@
-#stage2 { padding: 0; overflow: hidden; }
-#stage2.s2-shake { animation: s2-shake 0.6s cubic-bezier(.36,.07,.19,.97) both; }
+#stage2 { padding: 0; min-height: auto; overflow: clip; }
+/* reduced motion: no GSAP pin, so keep the ~300vh band with a sticky panel */
+#stage2.s2-static { min-height: 300vh; }
+#stage2.s2-static .s2-pin { position: sticky; top: 0; }
+/* Shake the pinned element itself (via translate/rotate, which GSAP's pin doesn't touch).
+   A transform on #stage2 would become the containing block for the position:fixed pin. */
+#stage2.s2-shake .s2-pin { animation: s2-shake 0.6s cubic-bezier(.36,.07,.19,.97); }
 @keyframes s2-shake {
-  10%, 90% { transform: translate(-3px, 2px); }
-  20%, 80% { transform: translate(6px, -4px); }
-  30%, 50%, 70% { transform: translate(-10px, 6px) rotate(-0.4deg); }
-  40%, 60% { transform: translate(10px, -6px) rotate(0.4deg); }
+  10%, 90% { translate: -3px 2px; }
+  20%, 80% { translate: 6px -4px; }
+  30%, 50%, 70% { translate: -10px 6px; rotate: -0.4deg; }
+  40%, 60% { translate: 10px -6px; rotate: 0.4deg; }
 }
 
 .s2-pin {

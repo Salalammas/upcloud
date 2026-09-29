@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { gsap, reducedMotion } from '../lib/scroll'
+import { gsap, reducedMotion, setScrollLocked, INTRO_DONE_EVENT } from '../lib/scroll'
 import './Intro.css'
 
 type Phase = 'boot' | 'ready' | 'powering' | 'done'
@@ -12,15 +12,25 @@ export default function Intro() {
   const flashRef = useRef<HTMLDivElement>(null)
   const startedRef = useRef(false)
 
-  // Lock scroll while visible
+  const done = phase === 'done'
+
+  // Lock scroll (native + Lenis) while visible. The component stays mounted after
+  // it renders null, so the lock must key off `done`, not unmount.
   useEffect(() => {
+    if (done) return
     const el = document.documentElement
     const prev = el.style.overflow
     el.style.overflow = 'hidden'
+    setScrollLocked(true)
     return () => {
       el.style.overflow = prev
+      setScrollLocked(false)
     }
-  }, [])
+  }, [done])
+
+  useEffect(() => {
+    if (done) window.dispatchEvent(new Event(INTRO_DONE_EVENT))
+  }, [done])
 
   // Fake loading bar
   useEffect(() => {
@@ -68,7 +78,7 @@ export default function Intro() {
     }
   }, [start])
 
-  if (phase === 'done') return null
+  if (done) return null
 
   return (
     <div

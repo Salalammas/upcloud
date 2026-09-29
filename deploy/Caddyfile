@@ -1,20 +1,31 @@
-upcloud.danidev.fi {
+(site) {
 	root * /var/www/upcloud
 	encode zstd gzip
 
 	header {
-		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 		X-Content-Type-Options "nosniff"
 		Referrer-Policy "strict-origin-when-cross-origin"
 		-Server
 	}
 
+	# Hashed build assets are immutable; everything else (index.html, SPA
+	# fallbacks, public/ files) must revalidate. Matchers see the original
+	# request path, so match "not assets" rather than "/" to cover SPA routes.
 	@assets path /assets/*
 	header @assets Cache-Control "public, max-age=31536000, immutable"
-
-	@html path / /index.html
-	header @html Cache-Control "no-cache"
+	@notassets not path /assets/*
+	header @notassets Cache-Control "no-cache"
 
 	try_files {path} /index.html
 	file_server
+}
+
+upcloud.danidev.fi {
+	import site
+	header Strict-Transport-Security "max-age=31536000"
+}
+
+# Plain HTTP fallback on any host / raw IP (works before DNS resolves).
+:80 {
+	import site
 }

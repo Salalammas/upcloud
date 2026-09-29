@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { scrollState, chaos } from '../lib/scroll'
@@ -42,6 +42,17 @@ function makeTerrain(side: 1 | -1) {
   }
   const ng = g.toNonIndexed()
   g.dispose()
+  if (side < 0) {
+    // mirroring x flips triangle winding; swap verts 1/2 so faces point up (not back-face culled)
+    const a = ng.attributes.position.array as Float32Array
+    for (let i = 0; i < a.length; i += 9) {
+      for (let k = 0; k < 3; k++) {
+        const t = a[i + 3 + k]
+        a[i + 3 + k] = a[i + 6 + k]
+        a[i + 6 + k] = t
+      }
+    }
+  }
   ng.computeVertexNormals()
   return ng
 }
@@ -143,12 +154,22 @@ export default function Track() {
     [],
   )
 
+  useEffect(
+    () => () => {
+      Object.values(geo).forEach((g) => g.dispose())
+      Object.values(mat).forEach((m) => m.dispose())
+    },
+    [geo, mat],
+  )
+
   const props = useMemo(genProps, [])
   const DASHES = 10 // per segment
   const RUMBLES = 20 // per side per segment
   const ARCH_PARTS = 3
 
   useLayoutEffect(() => {
+    const white = new THREE.Color('#ffffff')
+    const red = new THREE.Color('#e8182c')
     const m = new THREE.Matrix4()
     const q = new THREE.Quaternion()
     const e = new THREE.Euler()
@@ -183,7 +204,7 @@ export default function Track() {
           p.set((side ? 1 : -1) * (ROAD_W / 2 + 0.3), 0.03, oz - L / 2 + (r + 0.5) * (L / RUMBLES))
           s.set(0.6, 0.06, L / RUMBLES)
           put(rumbleRef.current, idx)
-          rumbleRef.current?.setColorAt(idx, new THREE.Color(r % 2 ? '#ffffff' : '#e8182c'))
+          rumbleRef.current?.setColorAt(idx, r % 2 ? white : red)
         }
       }
       // checkpoint arch, one per segment

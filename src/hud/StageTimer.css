@@ -48,6 +48,11 @@
 @media (max-width: 560px) {
   .st-splits { display: none; }
 }
+@media (max-width: 700px) {
+  .stage-timer { padding: 8px 10px; }
+  .st-time { font-size: clamp(28px, 9vw, 40px); }
+  .st-time-label { letter-spacing: 2px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .st-center.is-low .st-time { animation: none; color: var(--agi-red, #ff0033); }
   .st-splits li.is-new { animation: none; }

@@ -9,6 +9,7 @@ DEPLOY_HOST="${DEPLOY_HOST:-80.47.226.135}"
 
 npm ci && npm run build
 
-rsync -az --delete dist/ "${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/upcloud/"
+chmod -R u=rwX,go=rX dist
+rsync -az --delete --no-owner --no-group dist/ "${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/upcloud/"
 
 echo "Deployed to ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/upcloud/"
